@@ -1,0 +1,42 @@
+# docker-compose.yml
+version: '3'
+
+services:
+  db:
+    container_name: db
+    image: postgres:10.5 # use latest official postgres version
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=database
+    ports:
+      - 5432:5432
+
+  text-analysis:
+    build:
+      context: java-text-analysis/
+      dockerfile: Dockerfile
+    image: uptospeed/java-text-analysis
+    container_name: up-to-speed-service
+    restart: on-failure
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      #- DB_HOST=db
+      #- DB_PORT=5432
+      #- DB_DATABASE=database
+      - QUARKUS_DATASOURCE_URL=jdbc:postgresql://db:5432/database
+      - ORG_UPTOSPEED_BACKEND_SERVICES_TEXTSERVICE_MP_REST_URL=http://pos:8002/analyze
+
+  pos:
+    build: "."
+    image: python-text-analysis
+    ports:
+      - 8002:8002
+    container_name: pos
+    build:
+      context: python-text-analysis/
+      dockerfile: Dockerfile
