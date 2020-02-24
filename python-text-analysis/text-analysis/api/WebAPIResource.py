@@ -22,10 +22,10 @@ app = Flask(__name__)
 MIME_TYPE_JSON="application/json"
 
 
-@app.route("/analyze/<text>", methods=['GET'])
+@app.route("/analyze/<text>", methods=['POST'])
 def success(text):
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         nlp = spacy.load("en_core_web_sm")
         doc = nlp(text)
         list_entities = []

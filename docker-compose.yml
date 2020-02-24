@@ -31,6 +31,7 @@ services:
       - QUARKUS_DATASOURCE_URL=jdbc:postgresql://db:5432/database
       - ORG_UPTOSPEED_BACKEND_SERVICES_TEXTSERVICE_MP_REST_URL=http://pos:8002/analyze
 
+
   pos:
     build: "."
     image: python-text-analysis
