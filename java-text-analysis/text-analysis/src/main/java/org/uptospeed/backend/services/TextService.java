@@ -1,4 +1,17 @@
 package org.uptospeed.backend.services;
 
-public interface TextService {
+import javax.ws.rs.Produces;
+import javax.ws.rs.Path;
+import javax.ws.rs.GET;
+import java.io.IOException;
+import javax.ws.rs.PathParam;
+import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
+
+@RegisterRestClient
+public interface TextService
+{
+    @GET
+    @Path("{text}")
+    @Produces({ "application/json" })
+    String analyze(@PathParam("text") final String text) throws IOException;
 }

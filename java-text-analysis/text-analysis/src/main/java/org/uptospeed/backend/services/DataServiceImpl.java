@@ -2,11 +2,13 @@ package org.uptospeed.backend.services;
 
 import org.uptospeed.backend.data.LogManaging;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
-public class DataService {
+@ApplicationScoped
+public class DataServiceImpl implements DataService {
 
     @Inject
     EntityManager em;
@@ -15,7 +17,7 @@ public class DataService {
     public void createText(String text) {
         LogManaging logManaging = new LogManaging();
         logManaging.setText(text);
-        em.persist(text);
+        em.persist(logManaging);
     }
 
 }
