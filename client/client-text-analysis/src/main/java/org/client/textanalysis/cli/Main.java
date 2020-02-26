@@ -1,14 +1,15 @@
 package org.client.textanalysis.cli;
 
 import com.google.gson.Gson;
+import org.client.textanalysis.utils.MatcherUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 public class Main {
 
@@ -35,7 +36,7 @@ public class Main {
         for (int i = 0; i < args.length; i++) {
             switch (args[i]) {
                 case host:
-                    if (i + 1 < args.length) {
+                    if (i + 1 < args.length && validateHost(args[i + 1])) {
                         hostValue = args[i + 1];
                     } else {
                         System.out.println("Incorrect use of flag -h, no host provided");
@@ -49,7 +50,7 @@ public class Main {
                     }
                     break;
                 case port:
-                    if (i + 1 < args.length) {
+                    if (i + 1 < args.length && validatePort(args[i+1])) {
                         portValue = args[i + 1];
                     } else {
                         System.out.println("The flag -p was used, however no port provided");
@@ -58,6 +59,7 @@ public class Main {
         }
 
         try {
+
             URL url = new URL("http://" + hostValue + ":" + portValue + "/analyze");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
@@ -69,12 +71,12 @@ public class Main {
             Gson gson = new Gson();
 
             try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = gson.toJson(sentence).getBytes("utf-8");
+                byte[] input = gson.toJson(sentence).getBytes(StandardCharsets.UTF_8);
                 os.write(input, 0, input.length);
             }
 
             try (BufferedReader br = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream(), "utf-8"))) {
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
                 String responseLine = null;
                 while ((responseLine = br.readLine()) != null) {
@@ -85,5 +87,13 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static boolean validateHost(String hostname) {
+        return hostname.matches(MatcherUtils.HOSTNAME_REGEX);
+    }
+
+    private static boolean validatePort(String port) {
+        return port.matches(MatcherUtils.PORT_REGEX);
     }
 }
