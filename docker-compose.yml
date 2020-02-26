@@ -45,3 +45,6 @@ services:
     build:
       context: python-text-analysis/
       dockerfile: Dockerfile
+
+volumes:
+  db-data:
