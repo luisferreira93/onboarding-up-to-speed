@@ -1,16 +1,13 @@
 package org.uptospeed.backend.data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 public class LogManaging {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "text_id", updatable = false, nullable = false)
     private Long textId;
     @Column(name = "text_phrase")
