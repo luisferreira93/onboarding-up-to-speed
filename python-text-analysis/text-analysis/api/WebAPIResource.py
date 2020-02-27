@@ -22,15 +22,20 @@ app = Flask(__name__)
 MIME_TYPE_JSON="application/json"
 
 
-@app.route("/analyze/<text>", methods=['POST'])
-def success(text):
-
+@app.route("/analyze", methods=['POST'])
+def success():
+    print("entered")
     if request.method == 'POST':
         nlp = spacy.load("en_core_web_sm")
-        doc = nlp(text)
+        data = request.json
+        print(data)
+        if "sentence" not in data:
+            return Response("Wrong request received", status=HTTPStatus.BAD_REQUEST, mimetype=MIME_TYPE_JSON)
+        doc = nlp(json.dumps(data['sentence']))
         list_entities = []
         for token in doc:
-            list_entities.append(Entity(text=token.text, pos=token.pos_).__dict__)
+            if token.text is not "\"":
+                list_entities.append(Entity(text=token.text, pos=token.pos_).__dict__)
         return Response(json.dumps(list_entities), status=HTTPStatus.OK, mimetype=MIME_TYPE_JSON)
     else:
         return "Wrong"

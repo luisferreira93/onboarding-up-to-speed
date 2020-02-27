@@ -13,11 +13,12 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 
 @Path("analyze")
-@Consumes({ "application/json" })
+@Consumes(MediaType.APPLICATION_JSON)
 public class AnalysisResources
 {
     private Logger LOG = LoggerFactory.getLogger(AnalysisResources.class);
@@ -30,14 +31,15 @@ public class AnalysisResources
     DataService dataService;
 
     @POST
-    @Produces({ "application/json" })
+    @Produces(MediaType.APPLICATION_JSON)
     public Response insertText(final RequestData text) throws IOException {
         LOG.info("Text received and being analyzed. text={}", text);
         try {
             this.dataService.createText(text);
-            return Response.ok().header("content-type", "application/json")
-                    .entity(this.service.analyze(text.getSentence()))
-                    .type("application/json")
+            System.out.println(text.toString());
+            return Response.ok()
+                    .entity(this.service.analyze(text))
+                    .type(MediaType.APPLICATION_JSON)
                     .build();
         } catch (CommonException exception) {
             return Response.status(Response.Status.BAD_REQUEST).entity(exception.getMessage()).build();

@@ -16,7 +16,6 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
-
   text-analysis:
     build:
       context: java-text-analysis/
@@ -28,13 +27,13 @@ services:
       - 8080:8080
     depends_on:
       - db
+      - pos
     environment:
       #- DB_HOST=db
       #- DB_PORT=5432
       #- DB_DATABASE=database
       - QUARKUS_DATASOURCE_URL=jdbc:postgresql://db:5432/database
       - ORG_UPTOSPEED_BACKEND_SERVICES_TEXTSERVICE_MP_REST_URL=http://pos:8002/analyze
-
 
   pos:
     build: "."
@@ -45,6 +44,6 @@ services:
     build:
       context: python-text-analysis/
       dockerfile: Dockerfile
-
+  
 volumes:
   db-data:

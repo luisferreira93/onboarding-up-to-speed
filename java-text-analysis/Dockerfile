@@ -5,7 +5,7 @@ WORKDIR /project
 COPY text-analysis text-analysis/
 COPY text-analysis/pom.xml text-analysis/pom.xml
 
-RUN cd text-analysis && mvn clean install
+RUN cd text-analysis && mvn clean install -DskipTests=true
 
 WORKDIR /app
 
