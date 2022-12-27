@@ -1,5 +1,5 @@
 requests==2.22.0
 Flask==1.1.1
 spacy==2.1.6
-setuptools==41.2.0
+setuptools==65.5.1
 gunicorn==19.9.0
